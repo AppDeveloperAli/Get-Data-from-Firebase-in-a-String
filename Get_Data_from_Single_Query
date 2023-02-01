@@ -1,0 +1,47 @@
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                        // First we put our Collection address in Stream
+                        stream: FirebaseFirestore.instance.collection('Admin_Information')
+
+                        //then we put our Document ID to get all data in snapshot
+                            .doc('aJmyF90KcoLWZO4Pg0O1')
+                            .snapshots(),
+                        builder: (_, snapshot) {
+                          if (snapshot.hasError)
+                            return Text('Error = ${snapshot.error}');
+
+                          if (snapshot.hasData) {
+                            // Here we get data from snapshot and stored in a variable
+                            var output = snapshot.data!.data();
+                            
+                            // Now we store the exact value we want from the output variable
+                            var valueName = output!['Admin_Name'];
+                            var valueEmail = output['Admin_Email'];
+                            return Column(
+                              children: [
+                                Text(
+                                  //Here we show that variable
+                                  'Name : $valueName',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Text(
+                                  'Email : $valueEmail',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                              ],
+                            );
+                          }
+
+                          return Center(child: CircularProgressIndicator());
+                        },
+                      )
+                    ],
+                  ),
