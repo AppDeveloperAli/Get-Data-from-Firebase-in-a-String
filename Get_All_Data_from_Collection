@@ -1,0 +1,35 @@
+class _Notification_ReciverState extends State<Notification_Reciver> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          StreamBuilder(
+            // Here we give the "Collection" address to the stream
+            stream: FirebaseFirestore.instance.collection("Posts").snapshots(),
+            // Now our Data is stored in "snapshot"
+            builder: (context, snapshot) {
+              return !snapshot.hasData
+                  ? Text('PLease Wait')
+                  : ListView.builder(
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        // Here we get all the "document ID's" and stored the data in "myData" variable
+                        DocumentSnapshot myData = snapshot.data!.docs[index];
+                        return Order_View(
+                          // Here weshow the "Data" with the help of query
+                          title: myData['Post_Title'],
+                          desc: myData['Post_Description'],
+                          imageUrl: myData['Post_Image_Address'],
+                        );
+                      },
+                    );
+            },
+          )
+        ]),
+      ),
+    );
+  }
+}
